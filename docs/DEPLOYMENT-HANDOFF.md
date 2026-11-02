@@ -1,10 +1,10 @@
 # Remaining external actions
 
 ## GitHub source and verification
-GitHub write access was restored on 2 November 2026. The project source and GitHub Actions workflow are being published to:
+GitHub write access was restored on 2 November 2026. The project source and GitHub Actions workflow are published at:
 https://github.com/SharveshK1228/eventcrowd-dbms-level3
 
-Check the Actions tab for native PostgreSQL concurrency and MongoDB/HTTP smoke-test results. Local embedded PostgreSQL results alone do not verify those workflows.
+GitHub Actions run 41480004274 passed native PostgreSQL concurrency, MongoDB initialization, production build, and HTTP/worker smoke tests. Public Railway hosting remains pending explicit approval.
 
 ## Railway authorization
 A dedicated empty project was created:

@@ -10,10 +10,12 @@ Next.js production application; attendee registration/login; four roles; one-tim
 - Production dependency audit: zero known vulnerabilities at verification time.
 - Three static schema checks: pass.
 - Five database behavior checks plus parent test: pass using PGlite (embedded PostgreSQL): table/view creation, capacity constraint, event ownership, audit/outbox trigger, transaction rollback.
-- Native PostgreSQL concurrent row-lock tests and full MongoDB/HTTP smoke tests are supplied in GitHub CI; they have NOT run in this environment.
+- GitHub CI run 41480004274 passed with PostgreSQL 16 and MongoDB 7: concurrent scans, request replay and mismatch checks, exit/reentry rules, MongoDB validators/indexes, production build, HTTP authentication, ticket issuance, outbox delivery, crowd processing, threshold alert and analytics.
+- Verified implementation commit: 9c38a9c4bb6da19f19f1e3eb938dc01cf8912caa.
+- Evidence: https://github.com/SharveshK1228/eventcrowd-dbms-level3/actions/runs/41480004274
 
 ## External status
-- GitHub write access was restored on 2 November 2026. Source is being published to SharveshK1228/eventcrowd-dbms-level3; inspect GitHub Actions for the native PostgreSQL/MongoDB verification result.
+- All 51 project files are published on main at SharveshK1228/eventcrowd-dbms-level3. GitHub CI completed successfully.
 - Separate Railway project created. No database services or application deployed. Automatic approval review rejected provisioning PostgreSQL and MongoDB due to charge risk and requested explicit hosting authorization.
 - No live website URL exists.
 
