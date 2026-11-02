@@ -1,0 +1,3 @@
+import {NextResponse} from 'next/server';import {z} from 'zod';import {requireRole} from '../../../lib/auth';import {executeScan} from '../../../lib/scan';
+const s=z.object({qrToken:z.string().min(16),eventGateId:z.string().uuid(),idempotencyKey:z.string().uuid(),type:z.enum(['ENTRY','EXIT']),deviceId:z.string().uuid().optional()});
+export async function POST(r:Request){try{await requireRole('SECURITY','ADMIN','ORGANIZER');const input=s.parse(await r.json());return NextResponse.json(await executeScan(input))}catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Scan failed'},{status:400})}}

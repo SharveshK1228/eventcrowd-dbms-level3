@@ -1,0 +1,1 @@
+import React from 'react';import './style.css';export const metadata={title:'EventCrowd | Operations',description:'Real-time event crowd intelligence'};export default function Root({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}

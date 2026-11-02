@@ -1,0 +1,1 @@
+import {readFileSync} from 'node:fs';const paths=['db/schema.sql','db/seed.sql','scripts/mongo-init.mjs','scripts/outbox-worker.mjs','app/page.tsx','app/dashboard/page.tsx','app/api/scan/route.ts'];for(const p of paths){const s=readFileSync(p,'utf8');if(s.length<50)throw Error('Empty: '+p);console.log('OK',p,s.length)}

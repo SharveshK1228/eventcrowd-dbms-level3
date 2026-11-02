@@ -1,0 +1,37 @@
+name: Build and database integration
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: eventcrowd
+          POSTGRES_PASSWORD: ci_test_only
+          POSTGRES_DB: eventcrowd_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U eventcrowd -d eventcrowd_test"
+          --health-interval 5s --health-timeout 5s --health-retries 15
+      mongo:
+        image: mongo:8
+        ports: ['27017:27017']
+    env:
+      TEST_DATABASE_URL: postgresql://eventcrowd:ci_test_only@localhost:5432/eventcrowd_test
+      DATABASE_URL: postgresql://eventcrowd:ci_test_only@localhost:5432/eventcrowd_test
+      MONGODB_URI: mongodb://localhost:27017
+      MONGODB_DB: eventcrowd_test
+      AUTH_SECRET: ci-only-secret-with-at-least-thirty-two-characters
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run test:integration
+      - run: node scripts/mongo-init.mjs
+      - run: npm run build
+      - run: node scripts/smoke.mjs
