@@ -1,5 +1,8 @@
 // One Railway service supervises web + worker on the three-service free plan.
-import {spawn} from 'node:child_process';
+import {spawn,spawnSync} from 'node:child_process';
+// Initialize databases before accepting traffic or starting the worker.
+const setup=spawnSync(process.execPath,['scripts/setup.mjs'],{stdio:'inherit',timeout:120000});
+if(setup.status!==0)process.exit(setup.status||1);
 let stopping=false,exitCode=0,killTimer;
 const children=[
   spawn(process.execPath,['node_modules/next/dist/bin/next','start','-H','0.0.0.0'],{stdio:'inherit'}),
