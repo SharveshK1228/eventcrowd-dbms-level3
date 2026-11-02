@@ -33,15 +33,21 @@ Requires Node 24+, Docker Compose, Git.
 - `npm run build`: production compile and type check.
 - `.github/workflows/ci.yml`: fresh PostgreSQL + MongoDB, integration tests, production build, and HTTP/worker smoke test.
 
-## Deploy to Railway
+## Railway deployment
 
-Create a dedicated project with official Postgres and MongoDB templates and persistent volumes. Connect this repository as web and worker services. Keep database services private.
+Live app: https://eventcrowd-web-production.up.railway.app
+Operations: https://eventcrowd-web-production.up.railway.app/operations
+Project: https://railway.com/project/0b71a2e4-b1aa-4cbf-ae32-48f015e7c9b9
 
-Web variables: DATABASE_URL referencing Postgres.DATABASE_URL; MONGODB_URI referencing MongoDB.MONGO_URL; MONGODB_DB=eventcrowd; AUTH_SECRET (random 32+ characters); ADMIN_EMAIL; ADMIN_PASSWORD. Node version 24.
+The current free-plan setup uses three services: Postgres, MongoDB, and eventcrowd-web. The web service supervises Next.js and the background worker together through `node scripts/start.mjs`. If either process exits unexpectedly, both are stopped so Railway can restart the service consistently. Startup applies versioned SQL migrations and idempotent MongoDB setup before accepting traffic.
 
-`railway.json` configures web migration, build, healthcheck and start. For the **worker**, override start with `npm run worker`, remove the HTTP healthcheck, and use the same database variables; run only after migrations finish. Do not expose a worker domain. Verify terminal SUCCESS and /api/health before claiming deployment.
+The administrator account is `admin@eventcrowd.local`. Its generated password is stored only in eventcrowd-web's Railway Variables as ADMIN_PASSWORD. AUTH_SECRET and database credentials are also environment variables. Never copy them into the repository.
 
-No paid service is provisioned by these instructions automatically.
+Service settings: Node 24, build `npm ci && npm run build`, start `node scripts/start.mjs`, PORT=3000, healthcheck `/api/health` with a 180-second startup window. DATABASE_URL and MONGODB_URI reference the private Postgres and MongoDB service variables; MONGODB_DB=eventcrowd. Only the web service has a public domain.
+
+MongoDB's 500 MB demo volume requires a smaller index-build free-space reserve. Its start command is `docker-entrypoint.sh mongod --ipv6 --bind_ip ::,0.0.0.0 --setParameter diagnosticDataCollectionEnabled=false --setParameter indexBuildMinAvailableDiskSpaceMB=64`. This reserve is for the small academic dataset; monitor space before adding substantial data.
+
+The deployment is pinned to commit fa1abfe0819b9d14b45f49b3707053efaa0bdcd1. Reconnect the source without a commit pin if automatic deployments from main are wanted. Railway service settings are authoritative; the legacy JSON configuration files are retained as references. A separate worker service can be used on a plan that permits more services, but is not provisioned here.
 
 ## Design and advanced DBMS concepts
 
