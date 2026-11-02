@@ -4,7 +4,7 @@ Next.js crowd operations prototype using PostgreSQL for authoritative admissions
 
 ## Run locally
 
-Requires Node 22+, Docker Compose, Git.
+Requires Node 24+, Docker Compose, Git.
 
 1. `npm ci`
 2. Copy `.env.example` to `.env.local` and replace placeholders.
@@ -37,7 +37,7 @@ Requires Node 22+, Docker Compose, Git.
 
 Create a dedicated project with official Postgres and MongoDB templates and persistent volumes. Connect this repository as web and worker services. Keep database services private.
 
-Web variables: DATABASE_URL referencing Postgres.DATABASE_URL; MONGODB_URI referencing MongoDB.MONGO_URL; MONGODB_DB=eventcrowd; AUTH_SECRET (random 32+ characters); ADMIN_EMAIL; ADMIN_PASSWORD. Node version 22.
+Web variables: DATABASE_URL referencing Postgres.DATABASE_URL; MONGODB_URI referencing MongoDB.MONGO_URL; MONGODB_DB=eventcrowd; AUTH_SECRET (random 32+ characters); ADMIN_EMAIL; ADMIN_PASSWORD. Node version 24.
 
 `railway.json` configures web migration, build, healthcheck and start. For the **worker**, override start with `npm run worker`, remove the HTTP healthcheck, and use the same database variables; run only after migrations finish. Do not expose a worker domain. Verify terminal SUCCESS and /api/health before claiming deployment.
 
